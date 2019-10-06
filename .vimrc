@@ -29,6 +29,7 @@ if v:version >= 800
 
     " List plugins to load
     " making sure single quotes are always used
+    Plug 'editorconfig/editorconfig-vim'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'terryma/vim-multiple-cursors'
     Plug 'tpope/vim-eunuch'
