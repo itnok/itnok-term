@@ -1,0 +1,30 @@
+{
+  "name": "Default color scheme for shell prompts",
+  "groups": {
+    "mode":                      { "fg": "darkestgreen",    "bg": "brightgreen",  "attrs": ["bold"] },
+
+    "hostname":                  { "fg": "white",           "bg": "mediumorange", "attrs": [] },
+    "user":                      { "fg": "brightyellow",    "bg": "gray0",        "attrs": [] },
+
+    "jobnum":                    { "fg": "gray10",          "bg": "gray6",        "attrs": [] },
+
+    "cwd":                       { "fg": "gray8",           "bg": "gray1",        "attrs": [] },
+    "cwd:current_folder":        { "fg": "white",           "bg": "gray1",        "attrs": ["bold"] },
+    "cwd:divider":               { "fg": "gray6",           "bg": "gray1",        "attrs": [] },
+
+    "gitstatus":                 { "fg": "gray8",           "bg": "gray1",        "attrs": [] },
+    "gitstatus_branch":          { "fg": "gray8",           "bg": "gray1",        "attrs": [] },
+    "gitstatus_branch_clean":    { "fg": "green",           "bg": "gray1",        "attrs": [] },
+    "gitstatus_branch_dirty":    { "fg": "gray8",           "bg": "gray1",        "attrs": [] },
+    "gitstatus_branch_detached": { "fg": "mediumpurple",    "bg": "gray1",        "attrs": [] },
+    "gitstatus_tag":             { "fg": "darkcyan",        "bg": "gray1",        "attrs": [] },
+    "gitstatus_behind":          { "fg": "gray10",          "bg": "gray1",        "attrs": [] },
+    "gitstatus_ahead":           { "fg": "gray10",          "bg": "gray1",        "attrs": [] },
+    "gitstatus_staged":          { "fg": "green",           "bg": "gray1",        "attrs": [] },
+    "gitstatus_unmerged":        { "fg": "brightred",       "bg": "gray1",        "attrs": [] },
+    "gitstatus_changed":         { "fg": "mediumorange",    "bg": "gray1",        "attrs": [] },
+    "gitstatus_untracked":       { "fg": "brightestorange", "bg": "gray1",        "attrs": [] },
+    "gitstatus_stashed":         { "fg": "darkblue",        "bg": "gray1",        "attrs": [] },
+    "gitstatus:divider":         { "fg": "gray8",           "bg": "gray1",        "attrs": [] }
+  }
+}
