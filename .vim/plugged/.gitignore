@@ -1,0 +1,4 @@
+# ignore files in folder foo
+*
+# but keep the folder
+!.gitignore
