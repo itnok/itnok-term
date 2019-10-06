@@ -18,7 +18,7 @@ if v:version >= 800
     " Try to auto-install vim-plug if missing
     let autoload_vimplug_path=vim_data_path . '/autoload/plug.vim'
     if empty(glob(autoload_vimplug_path))
-      silent exe '!curl -fL --create-dirs -o ' . autoload_vimplug_path .
+      silent exe '!curl -sfL --create-dirs -o ' . autoload_vimplug_path .
         \ ' https://raw.github.com/junegunn/vim-plug/master/plug.vim'
       execute 'source ' . fnameescape(autoload_vimplug_path)
     endif
@@ -37,7 +37,7 @@ if v:version >= 800
 
     " END of plugin sysetm initialization
     call plug#end()
-    " Autoinstall plugins
+    " Autoinstall plugins on startup
     autocmd VimEnter *
           \  if !empty(filter(copy(g:plugs), '!isdirectory(v:val.dir)'))
           \|   PlugInstall --sync | q
