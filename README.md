@@ -1,3 +1,3 @@
-# itnok-term
+# :computer: itnok-term
 
-## Linux &amp; macOS cross-platform terminal configuration supporting vim &amp; tmux
+## :penguin: &amp; :apple: cross-platform terminal configuration supporting vim &amp; tmux
