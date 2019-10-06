@@ -1,2 +1,5 @@
 # itnok-term
-Configuration for a Linux &amp; macOS cross-platform terminal supporting vim &amp; tmux
+--
+
+##Linux &amp; macOS cross-platform terminal configuration supporting vim &amp; tmux
+--
