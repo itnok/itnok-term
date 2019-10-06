@@ -1,7 +1,9 @@
 " Load Powerline for Python3.x
 exe 'set rtp+=' . expand('${POWERLINE_PY_PKG_DIR}/powerline/bindings/vim/')
+" Set path to vim data/config directory
+let vim_data_path='~/.vim'
 " Set path to vim plugins
-let vimpluginpath='~/.vim/plugged'
+let vim_plugins_path=vim_data_path . '/plugged'
 " Always show statusline
 set laststatus=2
 " Activate Deoplete autocompletion plugin
@@ -12,10 +14,18 @@ if v:version >= 800
   else
     let python_version=0
   endif
-  if python_version > 305
+  if python_version >= 306
+    " Try to auto-install vim-plug if missing
+    let autoload_vimplug_path=vim_data_path . '/autoload/plug.vim'
+    if empty(glob(autoload_vimplug_path))
+      silent exe '!curl -fL --create-dirs -o ' . autoload_vimplug_path .
+        \ ' https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+      execute 'source ' . fnameescape(autoload_vimplug_path)
+    endif
+    unlet autoload_vimplug_path
     " Specify a directory for plugins
     "   - Avoid using standard Vim directory names like 'plugin'
-    call plug#begin(vimpluginpath)
+    call plug#begin(vim_plugins_path)
 
     " List plugins to load
     " making sure single quotes are always used
@@ -28,9 +38,9 @@ if v:version >= 800
     call plug#end()
     " Autoinstall plugins
     autocmd VimEnter *
-          \   if !empty(filter(copy(g:plugs), '!isdirectory(v:val.dir)'))
-          \|    PlugInstall | q
-          \|  endif
+          \  if !empty(filter(copy(g:plugs), '!isdirectory(v:val.dir)'))
+          \|   PlugInstall --sync | q
+          \| endif
     " Use tab for trigger completion with characters ahead and navigate.
     " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
     inoremap <silent><expr> <TAB>
@@ -69,7 +79,7 @@ set hlsearch
 highlight Search ctermbg=118 ctermfg=235
 " Set highlighted text in visual mode to grey
 highlight Visual cterm=bold ctermbg=DarkGrey ctermfg=NONE
-if !empty(glob(vimpluginpath . '/vim-gitgutter/autoload/gitgutter.vim'))
+if !empty(glob(vim_plugins_path . '/vim-gitgutter/autoload/gitgutter.vim'))
   " Customize vim-gitgutter colors
   let g:gitgutter_override_sign_column_highlight = 0
   let g:gitgutter_sign_added = '++'
