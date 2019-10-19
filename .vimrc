@@ -29,6 +29,7 @@ if v:version >= 800
 
     " List plugins to load
     " making sure single quotes are always used
+    Plug 'dracula/vim', {'as': 'dracula'}
     Plug 'editorconfig/editorconfig-vim'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'terryma/vim-multiple-cursors'
@@ -97,6 +98,8 @@ if !empty(glob(vim_plugins_path . '/vim-gitgutter/autoload/gitgutter.vim'))
 endif
 " Set Syntax Highlight ON
 syntax on
+" Set preferred colorscheme
+colorscheme dracula
 " Set Hack font-family if vim is run in a GUI
 if has('gui_running')
   set guifont=Hack:h14
