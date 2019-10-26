@@ -118,6 +118,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+
+#
+#  Seup Python3 AND Powerline
+#
+
 export PYTHON_VERSION="$($(which python3) --version | awk '{print $2}' | egrep -o '^[0-9]\.[0-9]')"
 
 export PY_DIR="${HOME}/.local/lib/python${PYTHON_VERSION}"
@@ -148,6 +153,23 @@ if [ -f "${POWERLINE_PY_PKG_DIR}/powerline/bindings/bash/powerline.sh" ]; then
   POWERLINE_BASH_SELECT=1
   . "${POWERLINE_PY_PKG_DIR}/powerline/bindings/bash/powerline.sh"
 fi
+
+
+#
+#  Setup Python Virtual Environment suooprt
+#
+
+export WORKON_HOME=${HOME}/.virtualenvs
+export PROJECT_HOME=${HOME}/wrk
+VIRTUAL_ENV_WRAPPER_SCRIPT="$(which virtualenvwrapper.sh)"
+if [ -n "${VIRTUAL_ENV_WRAPPER_SCRIPT}" ]; then
+  . ${VIRTUAL_ENV_WRAPPER_SCRIPT}
+fi
+
+
+#
+#  Setup NVM
+#
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
