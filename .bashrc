@@ -145,7 +145,9 @@ fi
 if [ -z "$(echo "${PATH}" | grep -o "${POWERLINE_BIN_DIR}:")" ] && [ -d "${POWERLINE_BIN_DIR}" ]; then
   export PATH="${POWERLINE_BIN_DIR}:$PATH"
 fi
-
+if [ -z "$(echo "${PATH}" | grep -o "Visual Studio Code\.app")" ] && [ -d "/Applications/Visual Studio Code.app" ]; then
+  export PATH="${PATH}:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+fi
 
 if [ -f "${POWERLINE_PY_PKG_DIR}/powerline/bindings/bash/powerline.sh" ]; then
   ${POWERLINE_BIN_DIR}/powerline-daemon -q
