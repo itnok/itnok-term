@@ -98,8 +98,9 @@ if !empty(glob(vim_plugins_path . '/vim-gitgutter/autoload/gitgutter.vim'))
 endif
 " Set Syntax Highlight ON
 syntax on
-" Set preferred colorscheme
-colorscheme dracula
+" Set preferred colorscheme to dracula
+" (but do not freak out if not there!)
+:silent! colorscheme dracula
 " Set Hack font-family if vim is run in a GUI
 if has('gui_running')
   set guifont=Hack:h14
