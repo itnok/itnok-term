@@ -1,0 +1,15 @@
+[:13114t0c-c4737-t350-10b3-113c0-77366]
+foreground-color='#F8F8F2'
+visible-name='itnok'
+palette=['#262626', '#E356A7', '#42E66C', '#E4F34A', '#9B6BDF', '#E64747', '#75D7EC', '#EFA554', '#7A7A7A', '#FF79C6', '#50FA7B', '#F1FA8C', '#BD93F9', '#FF5555', '#8BE9FD', '#FFB86C']
+default-size-rows=48
+default-size-columns=120
+use-system-font=false
+use-transparent-background=true
+use-theme-colors=false
+font='Hack 12'
+use-theme-transparency=false
+bold-color-same-as-fg=false
+bold-color='#6E46A4'
+background-color='#282A36'
+background-transparency-percent=10
