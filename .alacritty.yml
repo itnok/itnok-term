@@ -577,7 +577,7 @@ key_bindings:
   - { key: V,         mods: Control|Shift, action: Paste             }
   - { key: C,         mods: Control|Shift, action: Copy              }
   - { key: T,         mods: Control|Shift, chars:  "\x02\x63"        }
-  - { key: W,         mods: Control|Shift, chars:  "\x03\x04"        }
+  - { key: W,         mods: Control|Shift, chars:  "\x03\nexit\n"    }
   - { key: Q,         mods: Control|Shift, action: Quit              }
   #- { key: Insert,   mods: Shift,         action: PasteSelection     }
   - { key: Key0,      mods: Control,       action: ResetFontSize     }
