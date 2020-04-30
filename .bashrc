@@ -116,11 +116,16 @@ if ! shopt -oq posix; then
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
-  if [ -d ~/.bash_completion ]; then
-    for f in ~/.bash_completion/*.bash; do
-      . "${f}"
-    done
-  fi
+fi
+
+
+#
+#  Alacritty Autocompletion
+#
+
+ALACRITTY="$(which alacritty || which /Applications/Alacritty.app/Contents/MacOS/alacritty)"
+if [ -n "${MINIO_CLIENT}" ] && [ -f "${HOME}/.config/alacritty/alacritty.bash" ]; then
+  . "${HOME}/.config/alacritty/alacritty.bash"
 fi
 
 
