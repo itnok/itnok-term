@@ -19,6 +19,35 @@ There are two things you can do about this warning:
   )
 (package-initialize)
 
+;;; mouse control
+(xterm-mouse-mode 1)
+
+;;; line numbers
+(global-linum-mode t)
+(set-face-background 'linum "#121212")
+(setq linum-format "%4d \u258f")
+
+;;; GitGutter
+(require 'git-gutter)
+(global-git-gutter-mode t)
+(git-gutter:linum-setup)
+(global-set-key (kbd "C-x C-g") 'git-gutter)
+(custom-set-variables
+ '(git-gutter:update-interval 5))
+(custom-set-variables
+ '(git-gutter:unchanged-sign "  ")
+ '(git-gutter:modified-sign "~~")
+ '(git-gutter:added-sign "++")
+ '(git-gutter:deleted-sign "--"))
+
+(set-face-background 'git-gutter:unchanged "#121212")
+(set-face-foreground 'git-gutter:modified "yellow")
+(set-face-background 'git-gutter:modified "#121212")
+(set-face-foreground 'git-gutter:added "green")
+(set-face-background 'git-gutter:added "#121212")
+(set-face-foreground 'git-gutter:deleted "red")
+(set-face-background 'git-gutter:deleted "#121212")
+
 ;;; defaults
 (setq-default make-backup-files nil)
 (setq-default indent-tabs-mode nil)
