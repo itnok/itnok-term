@@ -114,6 +114,15 @@
                 "priority": 60
             },
             {
+                "function": "vim_devicons.powerline.segments.webdevicons_file_format",
+                "exclude_modes": [
+                    "nc"
+                ],
+                "priority": 90,
+                "draw_soft_divider": false,
+                "before": " "
+            },
+            {
                 "function": "file_encoding",
                 "exclude_modes": [
                     "nc"
@@ -126,6 +135,14 @@
                     "nc"
                 ],
                 "priority": 60
+            },
+            {
+                "function": "vim_devicons.powerline.segments.webdevicons",
+                "exclude_modes": [
+                    "nc"
+                ],
+                "priority": 10,
+                "draw_soft_divider": false
             },
             {
                 "function": "line_percent",

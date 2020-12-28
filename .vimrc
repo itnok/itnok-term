@@ -41,14 +41,36 @@ if v:version >= 800
     Plug 'terryma/vim-multiple-cursors'
     Plug 'tpope/vim-eunuch'
     Plug 'airblade/vim-gitgutter'
+    Plug 'preservim/nerdtree'
+          \| Plug 'Xuyuanp/nerdtree-git-plugin'
+          \| Plug 'ryanoasis/vim-devicons'
 
     " END of plugin sysetm initialization
     call plug#end()
+    " Start NERDTree. If a file is specified, move the cursor to its window.
+    autocmd StdinReadPre * let s:std_in=1
     " Autoinstall plugins on startup
     autocmd VimEnter *
           \  if !empty(filter(copy(g:plugs), '!isdirectory(v:val.dir)'))
           \|   PlugInstall --sync | q
           \| endif
+          \| NERDTree
+          \| if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in')
+          \|   execute 'NERDTree' argv()[0]
+          \|   wincmd p
+          \|   enew
+          \|   execute 'cd '.argv()[0]
+          \| else
+          \|   wincmd p
+          \| endif
+    " Exit Vim if NERDTree is the only window left.
+    autocmd BufEnter *
+          \  if tabpagenr('$') == 1 && winnr('$') == 1
+          \  && exists('b:NERDTree') && b:NERDTree.isTabTree()
+          \|   quit
+          \| endif
+    " Open the existing NERDTree on each new tab.
+    autocmd BufWinEnter * silent NERDTreeMirror
     " Use tab for trigger completion with characters ahead and navigate.
     " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
     inoremap <silent><expr> <TAB>
@@ -64,6 +86,28 @@ if v:version >= 800
 
     " Use <c-space> to trigger completion.
     inoremap <silent><expr> <c-space> coc#refresh()
+
+    " Make NERDTree show dot-files (hidden)
+    let NERDTreeShowHidden=1
+    " Load the DevIcon plugin
+    let g:webdevicons_enable=1
+    " Add the flags to NERDTree
+    let g:webdevicons_enable_nerdtree=1
+    " The amount of space to use after the DevIcon glyph character (default ' ')
+    let g:WebDevIconsNerdTreeAfterGlyphPadding='  '
+    " Force extra padding in NERDTree so that the filetype icons line up vertically
+    let g:WebDevIconsNerdTreeGitPluginForceVAlign=1
+    " Enable open and close folder/directory glyph flags (default 0)
+    let g:DevIconsEnableFoldersOpenClose=1
+    " Enable NerdFont support for NERDTreeGit (default 0)
+    let g:NERDTreeGitStatusUseNerdFonts=1
+
+    " Normal mode: \n focus on NERDTree
+    nnoremap <leader>] :NERDTreeFocus<CR>
+    " Normal mode: Ctrl+t toggle NERDTree
+    nnoremap <C-t> :NERDTreeToggle<CR>
+    " Normal mode: Ctrl+f find current file in NERDTree
+    nnoremap <C-f> :NERDTreeFind<CR>
 
   endif
 endif
@@ -118,9 +162,9 @@ syntax on
 " Set preferred colorscheme to dracula
 " (but do not freak out if not there!)
 :silent! colorscheme dracula
-" Set Hack font-family if vim is run in a GUI
+" Set 'Hack NF' (Hack font with NerdFont-patched!) font-family if vim is run in a GUI
 if has('gui_running')
-  set guifont=Hack:h14
+  set guifont='Hack NF':h14
 endif
 " The width of a TAB is set to 2. Still it is a \t. It is just that
 " Vim will interpret it to be having a width of 2.
