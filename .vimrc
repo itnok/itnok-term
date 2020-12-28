@@ -15,6 +15,10 @@ if v:version >= 800
     let python_version=0
   endif
   if python_version >= 306
+    " The plugin neoclide/coc.vim might have some
+    " troubles finding the right node executable
+    " let's give it some help...
+    let g:coc_node_path=substitute(system('which node'),'\n$','','')
     " Try to auto-install vim-plug if missing
     let autoload_vimplug_path=vim_data_path . '/autoload/plug.vim'
     if empty(glob(autoload_vimplug_path))
