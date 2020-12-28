@@ -6,6 +6,8 @@ let vim_data_path='~/.vim'
 let vim_plugins_path=vim_data_path . '/plugged'
 " Always show statusline
 set laststatus=2
+" Set default shell to BASH
+set shell=bash
 " Activate Deoplete autocompletion plugin
 " (only if vim8 & python 3.6)
 if v:version >= 800
