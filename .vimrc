@@ -67,6 +67,17 @@ if v:version >= 800
 
   endif
 endif
+" Go to tab by number \x (e.g. \3 to go to tab #3)
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
 " Use 256 colours (Use this setting only if your terminal supports 256 colours)
 set t_Co=256
 " Set the encoding for display
