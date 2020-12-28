@@ -87,6 +87,7 @@ highlight Search ctermbg=118 ctermfg=235
 highlight Visual cterm=bold ctermbg=DarkGrey ctermfg=NONE
 if !empty(glob(vim_plugins_path . '/vim-gitgutter/autoload/gitgutter.vim'))
   " Customize vim-gitgutter colors
+  let g:gitgutter_override_sign_column_highlight = 0
   let g:gitgutter_sign_added = '++'
   let g:gitgutter_sign_modified = '~~'
   let g:gitgutter_sign_removed = '--'
