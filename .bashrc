@@ -130,7 +130,21 @@ fi
 
 
 #
-#  Seup Python3 AND Powerline
+#  Setup Ruby
+#
+
+export RUBY_VERSION="$($(which gem) env | grep '\- RUBY VERSION:' | awk '{print $4}' | egrep -o '^[0-9]\.[0-9]\.*[0-9]*')"
+export RUBY_USER_DIR="$($(which gem) env | grep '\- USER INSTALLATION DIRECTORY:' | awk '{print $5}')"
+
+if [ -n "$(which gem)" ] && [ -n "${RUBY_VERSION}" ] && [ -n ${RUBY_USER_DIR} ] && [ -d ${RUBY_USER_DIR} ]; then
+  if [ -z "$(echo "${PATH}" | grep -o "${RUBY_USER_DIR}/bin:")" ] && [ -d "${RUBY_USER_DIR}/bin" ]; then
+    export PATH="${RUBY_USER_DIR}/bin:${PATH}"
+  fi
+fi
+
+
+#
+#  Setup Python3 AND Powerline
 #
 
 export PYTHON_VERSION="$($(which python3) --version | awk '{print $2}' | egrep -o '^[0-9]\.[0-9]')"
