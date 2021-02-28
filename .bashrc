@@ -207,6 +207,7 @@ export NVM_DIR="$HOME/.nvm"
 #
 
 MINIO_CLIENT="$(which mc)"
-if [ -n "${MINIO_CLIENT}" ]; then
+if [ -n "${MINIO_CLIENT}" ] && [ "$(${MINIO_CLIENT} --help | grep -o 'MinIO Client')" == "MinIO Client" ]; then
   complete -C ${MINIO_CLIENT} mc
 fi
+
