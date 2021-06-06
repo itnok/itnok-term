@@ -203,6 +203,15 @@ export NVM_DIR="$HOME/.nvm"
 
 
 #
+#  Setup Rust
+#
+
+if [ -f "${HOME}/.cargo/env" ]; then
+  . "${HOME}/.cargo/env"
+fi
+
+
+#
 #  MinIO Client Autocompletion
 #
 
