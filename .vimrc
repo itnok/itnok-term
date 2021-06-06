@@ -11,6 +11,9 @@ set shell=bash
 " Activate Deoplete autocompletion plugin
 " (only if vim8 & python 3.6)
 if v:version >= 800
+  if (v:version <= 801) && !has('patch1719')
+    let g:coc_disable_startup_warning=1
+  endif
   if has("python3")
     python3 import vim; from sys import version_info as v; vim.command('let python_version=%d' % (v[0] * 100 + v[1]))
   else
