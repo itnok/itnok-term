@@ -220,3 +220,19 @@ if [ -n "${MINIO_CLIENT}" ] && [ "$(${MINIO_CLIENT} --help | grep -o 'MinIO Clie
   complete -C ${MINIO_CLIENT} mc
 fi
 
+
+#
+#  Setup kubectl
+#
+
+KUBECTL="$(which kubectl)"
+if [ -n "${KUBECTL}" ] && [ "$(${KUBECTL} version --client | grep -o 'Client Version: version.Info')" == "Client Version: version.Info" ]; then
+  . <(${KUBECTL} completion bash)
+  if [ -d "${HOME}/.kube" ]; then
+    for _CONF_ in $(ls "${HOME}/.kube/"); do
+      KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/${_CONF_}"
+    done
+    export KUBECONFIG=$(echo "${KUBECONFIG}" | sed -e "s/^://" -e "s/:$//")
+  fi
+fi
+
