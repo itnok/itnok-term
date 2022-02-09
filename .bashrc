@@ -212,6 +212,19 @@ fi
 
 
 #
+#  Setup Go
+#
+
+GO="$(which go)"
+if [ -n "${GO}" ]; then
+  if [ ! -f "${HOME}/.golang" ]; then
+    mkdir -p "${HOME}/.golang"
+  fi
+  export GOPATH="${HOME}/.golang:${GOPATH}"
+fi
+
+
+#
 #  MinIO Client Autocompletion
 #
 
