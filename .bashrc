@@ -124,7 +124,7 @@ fi
 #
 
 ALACRITTY="$(which alacritty || which /Applications/Alacritty.app/Contents/MacOS/alacritty)"
-if [ -n "${MINIO_CLIENT}" ] && [ -f "${HOME}/.config/alacritty/alacritty.bash" ]; then
+if [ -n "${ALACRITTY}" ] && [ -f "${HOME}/.config/alacritty/alacritty.bash" ]; then
   . "${HOME}/.config/alacritty/alacritty.bash"
 fi
 
