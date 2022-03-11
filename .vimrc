@@ -105,6 +105,8 @@ if v:version >= 800
     let g:DevIconsEnableFoldersOpenClose=1
     " Enable NerdFont support for NERDTreeGit (default 0)
     let g:NERDTreeGitStatusUseNerdFonts=1
+    " Open files in a new tab on <CR> (instead of in a new panel)
+    let NERDTreeCustomOpenArgs={'file': {'where': 't', 'reuse': 'all', 'keepopen': 1, 'stay': 0 }}
 
     " Normal mode: \n focus on NERDTree
     nnoremap <leader>] :NERDTreeFocus<CR>
