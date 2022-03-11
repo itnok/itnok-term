@@ -190,3 +190,64 @@ set clipboard=unnamed,unnamedplus
 " On exit copy the default buffer to clipboard
 autocmd VimLeave * call system("echo -n $'" . escape(getreg(), "'") . "' | xclip -i -f -selection primary | xclip -i -selection clipboard")
 
+" Fn: Create a panel to host a terminal
+function! CreateTermPanel(buf, side, size) abort
+  " Create a new terminal in no buffer is present just yet
+  if a:buf == 0
+    term
+  else
+    execute "sp" bufname(a:buf)
+  endif
+  " Set the default side to bottom if a wrong/not-existing argument is passed
+  if stridx("hjklHJKL", a:side) == -1
+    execute "wincmd" "J"
+  else
+    execute "wincmd" a:side
+  endif
+  " Horizontal split resize
+  if stridx("jkJK", a:side) >= 0
+    if ! a:side > 0
+      resize 7
+    else
+      execute "resize" a:size
+    endif
+    return
+  endif
+  " Vertical split resize
+  if stridx("hlHL", a:side) >= 0
+    if ! a:side > 0
+      vertical resize 15
+    else
+      execute "vertical resize" a:size
+    endif
+  endif
+endfunction
+
+" Fn: Toggle a terminal panel created by CreateTermPanel
+function! s:ToggleTermPanel(side, size) abort
+  let tpbl = []
+  let closed = 0
+  let tpbl = tabpagebuflist()
+  " Hide visible terminals
+  for buf in filter(range(1, bufnr('$')), 'bufexists(bufname(v:val)) && index(tpbl, v:val) >= 0')
+    if getbufvar(buf, '&buftype') ==? 'terminal'
+      silent execute bufwinnr(buf) . "hide"
+      let closed += 1
+    endif
+  endfor
+  if closed > 0
+    return
+  endif
+  " Open first hidden terminal
+  for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val) < 0')
+    if getbufvar(buf, '&buftype') ==? 'terminal'
+      call CreateTermPanel(buf, a:side, a:size)
+      return
+    endif
+  endfor
+  " Open new terminal
+  call CreateTermPanel(0, a:side, a:size)
+endfunction
+
+" Toggle terminal - bottom
+nnoremap <leader>t :call <SID>ToggleTermPanel('J', 7)<CR>
