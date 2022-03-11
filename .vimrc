@@ -51,6 +51,9 @@ if v:version >= 800
 
     " END of plugin sysetm initialization
     call plug#end()
+    " Update Plugins with \p
+    nnoremap <leader>p :PlugUpdate<CR>
+
     " Start NERDTree. If a file is specified, move the cursor to its window.
     autocmd StdinReadPre * let s:std_in=1
     " Autoinstall plugins on startup
@@ -108,7 +111,7 @@ if v:version >= 800
     " Open files in a new tab on <CR> (instead of in a new panel)
     let NERDTreeCustomOpenArgs={'file': {'where': 't', 'reuse': 'all', 'keepopen': 1, 'stay': 0 }}
 
-    " Normal mode: \n focus on NERDTree
+    " Normal mode: \] focus on NERDTree
     nnoremap <leader>] :NERDTreeFocus<CR>
     " Normal mode: Ctrl+t toggle NERDTree
     nnoremap <C-t> :NERDTreeToggle<CR>
