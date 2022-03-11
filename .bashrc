@@ -220,7 +220,14 @@ if [ -n "${GO}" ]; then
   if [ ! -f "${HOME}/.golang" ]; then
     mkdir -p "${HOME}/.golang"
   fi
-  export GOPATH="${HOME}/.golang:${GOPATH}"
+  if [ -z "${GOPATH}" ]; then
+    export GOPATH="${HOME}/.golang"
+  else
+    export GOPATH="${HOME}/.golang:${GOPATH}"
+  fi
+  if [ -d "${HOME}/wrk" ]; then
+    export GOPATH="${GOPATH}:${HOME}/wrk"
+  fi
 fi
 
 
@@ -248,4 +255,3 @@ if [ -n "${KUBECTL}" ] && [ "$(${KUBECTL} version --client | grep -o 'Client Ver
     export KUBECONFIG=$(echo "${KUBECONFIG}" | sed -e "s/^://" -e "s/:$//")
   fi
 fi
-

@@ -47,6 +47,7 @@ if v:version >= 800
     Plug 'preservim/nerdtree'
           \| Plug 'Xuyuanp/nerdtree-git-plugin'
           \| Plug 'ryanoasis/vim-devicons'
+    Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 
     " END of plugin sysetm initialization
     call plug#end()
