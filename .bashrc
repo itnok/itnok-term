@@ -11,15 +11,16 @@ case $- in
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
+# also remove from history any previous duplicate.
 # See bash(1) for more options
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=10000
+HISTFILESIZE=512000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -90,13 +91,31 @@ fi
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
-alias ll='ls -alF'
+alias ll='ls -alFh'
 alias la='ls -A'
 alias l='ls -CF'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+function add_dir_to_path_if_missing {
+    local dir="${1}"
+    local postfix="$([ "${2}" = "postfix" ] && echo "postfix" )"
+    local pattern="${dir}:"
+
+    if [ -n "${postfix}" ]; then
+        pattern=":${dir}"
+    fi
+
+    if [ -z "$(echo "${PATH}" | grep -o "${pattern}")" ] && [ -d "${dir}" ]; then
+        if [ -n "${postfix}" ]; then
+            export PATH="${PATH}${pattern}"
+        else
+            export PATH="${pattern}${PATH}"
+        fi
+    fi
+}
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -107,15 +126,28 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+# share history among all terminals
+PROMPT_COMMAND="${PROMPT_COMMAND:+${PROMPT_COMMAND}$'\n'}history -a; history -c; history -r"
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
+fi
+
+
+#
+#  Homebrew support
+#
+
+BREW="$(which brew)"
+if [ -n "${BREW}" ]; then
+    BREW_PATH="$(${BREW} --prefix)"
 fi
 
 
@@ -125,7 +157,7 @@ fi
 
 ALACRITTY="$(which alacritty || which /Applications/Alacritty.app/Contents/MacOS/alacritty)"
 if [ -n "${ALACRITTY}" ] && [ -f "${HOME}/.config/alacritty/alacritty.bash" ]; then
-  . "${HOME}/.config/alacritty/alacritty.bash"
+    . "${HOME}/.config/alacritty/alacritty.bash"
 fi
 
 
@@ -137,9 +169,7 @@ export RUBY_VERSION="$($(which gem) env | grep '\- RUBY VERSION:' | awk '{print 
 export RUBY_USER_DIR="$($(which gem) env | grep '\- USER INSTALLATION DIRECTORY:' | awk '{print $5}')"
 
 if [ -n "$(which gem)" ] && [ -n "${RUBY_VERSION}" ] && [ -n ${RUBY_USER_DIR} ] && [ -d ${RUBY_USER_DIR} ]; then
-  if [ -z "$(echo "${PATH}" | grep -o "${RUBY_USER_DIR}/bin:")" ] && [ -d "${RUBY_USER_DIR}/bin" ]; then
-    export PATH="${RUBY_USER_DIR}/bin:${PATH}"
-  fi
+    add_dir_to_path_if_missing "${RUBY_USER_DIR}/bin"
 fi
 
 
@@ -147,37 +177,56 @@ fi
 #  Setup Python3 AND Powerline
 #
 
-export PYTHON_VERSION="$($(which python3) --version | awk '{print $2}' | egrep -o '^[0-9]\.[0-9]')"
+export PYTHON_VERSION="$($(which python3) --version | awk '{print $2}' | egrep -o '^[0-9]\.[0-9][0-9]*')"
 
 export PY_DIR="${HOME}/.local/lib/python${PYTHON_VERSION}"
 if [ "${OS_NAME}" = "Darwin" ]; then
-  export PY_DIR="${HOME}/Library/Python/${PYTHON_VERSION}"
+    export PY_DIR="${HOME}/Library/Python/${PYTHON_VERSION}"
 fi
 export POWERLINE_PY_PKG_DIR="${PY_DIR}/site-packages"
 export POWERLINE_BIN_DIR="${HOME}/.local/bin"
 if [ "${OS_NAME}" = "Darwin" ]; then
-  export POWERLINE_PY_PKG_DIR="${PY_DIR}/lib/python/site-packages"
-  export POWERLINE_BIN_DIR="${PY_DIR}/bin"
+    export POWERLINE_PY_PKG_DIR="${PY_DIR}/lib/python/site-packages"
+    export POWERLINE_BIN_DIR="${PY_DIR}/bin"
 fi
 
-if [ -z "$(echo "${PATH}" | grep -o "${HOME}/bin:")" ] && [ -d "${HOME}/bin" ]; then
-  export PATH="${HOME}/bin:$PATH"
+
+#
+#  pyenv support
+#
+
+PYENV="$(which pyenv)"
+if [ -n "${PYENV}" ]; then
+    export PYENV_ROOT="${HOME}/.pyenv"
+    add_dir_to_path_if_missing "${PYENV_ROOT}"
 fi
-if [ -z "$(echo "${PATH}" | grep -o "${HOME}/\.local/bin:")" ] && [ -d "${HOME}/.local/bin" ]; then
-  export PATH="${HOME}/.local/bin:$PATH"
+
+
+add_dir_to_path_if_missing "${HOME}/bin"
+add_dir_to_path_if_missing "${HOME}/.local/bin"
+
+
+#
+#  VScode support
+#
+
+if [ "${OS_NAME}" = "Darwin" ]; then 
+    add_dir_to_path_if_missing "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" "postfix"
 fi
+
+
+#
+#  Powerline support
+#
+
 if [ -z "$(echo "${PATH}" | grep -o "${POWERLINE_BIN_DIR}:")" ] && [ -d "${POWERLINE_BIN_DIR}" ]; then
-  export PATH="${POWERLINE_BIN_DIR}:$PATH"
+    export PATH="${POWERLINE_BIN_DIR}:$PATH"
 fi
-if [ -z "$(echo "${PATH}" | grep -o "Visual Studio Code\.app")" ] && [ -d "/Applications/Visual Studio Code.app" ]; then
-  export PATH="${PATH}:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-fi
-
 if [ -f "${POWERLINE_PY_PKG_DIR}/powerline/bindings/bash/powerline.sh" ]; then
-  ${POWERLINE_BIN_DIR}/powerline-daemon -q
-  POWERLINE_BASH_CONTINUATION=1
-  POWERLINE_BASH_SELECT=1
-  . "${POWERLINE_PY_PKG_DIR}/powerline/bindings/bash/powerline.sh"
+    ${POWERLINE_BIN_DIR}/powerline-daemon -q
+    export POWERLINE_BASH_CONTINUATION=1
+    export POWERLINE_BASH_SELECT=1
+    . "${POWERLINE_PY_PKG_DIR}/powerline/bindings/bash/powerline.sh"
 fi
 
 
@@ -189,7 +238,7 @@ export WORKON_HOME=${HOME}/.virtualenvs
 export PROJECT_HOME=${HOME}/wrk
 VIRTUAL_ENV_WRAPPER_SCRIPT="$(which virtualenvwrapper.sh)"
 if [ -n "${VIRTUAL_ENV_WRAPPER_SCRIPT}" ]; then
-  . ${VIRTUAL_ENV_WRAPPER_SCRIPT}
+    . ${VIRTUAL_ENV_WRAPPER_SCRIPT}
 fi
 
 
@@ -207,7 +256,7 @@ export NVM_DIR="${HOME}/.nvm"
 #
 
 if [ -f "${HOME}/.cargo/env" ]; then
-  . "${HOME}/.cargo/env"
+    . "${HOME}/.cargo/env"
 fi
 
 
@@ -216,18 +265,26 @@ fi
 #
 
 GO="$(which go)"
+if [ -z "${GO}" ] && [ -n "${BREW}" ]; then
+    for G in "${BREW_PATH}/opt/go"*; do
+        add_dir_to_path_if_missing "${G}/bin"
+    done
+    GO="${which go}"
+fi
 if [ -n "${GO}" ]; then
-  if [ ! -f "${HOME}/.golang" ]; then
-    mkdir -p "${HOME}/.golang"
-  fi
-  if [ -z "${GOPATH}" ]; then
-    export GOPATH="${HOME}/.golang"
-  else
-    export GOPATH="${HOME}/.golang:${GOPATH}"
-  fi
-  if [ -d "${HOME}/wrk" ]; then
-    export GOPATH="${GOPATH}:${HOME}/wrk"
-  fi
+    if [ ! -f "${HOME}/.golang" ]; then
+        mkdir -p "${HOME}/.golang"
+    fi
+    if [ -z "${GOPATH}" ]; then
+        export GOPATH="${HOME}/.golang"
+    else
+        if [ -z "$(echo "${GOPATH}" | grep -o "${HOME}/.golang:")" ] && [ -d "${HOME}/.golang" ]; then
+            export GOPATH="${HOME}/.golang:${GOPATH}"
+        fi
+    fi
+    if [ -d "${HOME}/wrk" ]; then
+        export GOPATH="${GOPATH}:${HOME}/wrk"
+    fi
 fi
 
 
@@ -237,7 +294,7 @@ fi
 
 MINIO_CLIENT="$(which mc)"
 if [ -n "${MINIO_CLIENT}" ] && [ "$(${MINIO_CLIENT} --help | grep -o 'MinIO Client')" == "MinIO Client" ]; then
-  complete -C ${MINIO_CLIENT} mc
+    complete -C ${MINIO_CLIENT} mc
 fi
 
 
@@ -247,11 +304,27 @@ fi
 
 KUBECTL="$(which kubectl)"
 if [ -n "${KUBECTL}" ] && [ "$(${KUBECTL} version --client | grep -o 'Client Version: version.Info')" == "Client Version: version.Info" ]; then
-  . <(${KUBECTL} completion bash)
-  if [ -d "${HOME}/.kube" ]; then
-    for _CONF_ in $(ls "${HOME}/.kube/"); do
-      KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/${_CONF_}"
-    done
-    export KUBECONFIG=$(echo "${KUBECONFIG}" | sed -e "s/^://" -e "s/:$//")
-  fi
+    . <(${KUBECTL} completion bash)
+    if [ -d "${HOME}/.kube" ]; then
+        for _CONF_ in $(ls "${HOME}/.kube/"); do
+            KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/${_CONF_}"
+            if [ -z "$(echo "${KUBECONFIG}" | grep -o ":${HOME}/.kube/${_CONF_}")" ] && [ -d "${HOME}/.kube/${_CONF_}" ]; then
+                export KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/${_CONF_}"
+            fi
+        done
+        export KUBECONFIG=$(echo "${KUBECONFIG}" | sed -e "s/^://" -e "s/:$//")
+    fi
+fi
+
+
+#
+#  Setup fzf
+#
+
+FZF="$(which fzf)"
+if [ -n "${FZF}" ]; then
+    if [ -n "${BREW}" ] && [ -d "${BREW_PATH}/Cellar/fzf/"**"/shell/" ]; then
+        . "${BREW_PATH}/Cellar/fzf/"**"/shell/key-bindings.bash"
+        . "${BREW_PATH}/Cellar/fzf/"**"/shell/completion.bash"
+    fi
 fi

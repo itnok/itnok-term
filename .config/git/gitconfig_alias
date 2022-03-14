@@ -1,0 +1,42 @@
+;# 
+;# this file can be included in the main ~/.gitconfig file adding the section
+;#
+;# [include]
+;#   path = .config/git/gitconfig_alias
+;#
+
+[alias]
+  ls = "!f() { \
+    git -c color.ui=always log --format='%C(auto) %h %<(72,trunc)%s %C(magenta){*%ce*} %C(blue)[*%G?* %GT trust] %C(auto)%d' ${@} \
+    2>/dev/null \
+    | python3 -c \"import sys; import re; [print(\
+      re.sub(r'\\{\\*[ ]*([a-z0-9\\-_\\.]+)@[a-z]+\\.[a-z]+[ ]*\\*\\}', lambda c: (r'{%s}' % c.group(1)).rjust(20), l)\
+      .replace('[*G* fully ', '[\\N{white heavy check mark} full ')\
+      .replace('[*N* undefined ', '[\\N{cross mark} no ')\
+      .replace('[*N*  ', '[\\N{cross mark} no ')\
+      .replace('[*B*  trust', '[\\N{skull} bad signature')\
+      .replace('[*U* ', '[\\N{performing arts} ')\
+      .replace('[*X* ', '[\\N{pencil} \\N{hourglass} ')\
+      .replace('[*Y* ', '[\\N{key} \\N{hourglass} ')\
+      .replace('[*R* ', '[\\N{key} \\N{coffin} ')\
+      .replace('[*E* ', '[\\N{pencil} \\N{ghost} ')\
+      .replace('{pie-github-noreply}', '{\\N{octopus}}'.rjust(19))\
+      .strip()) for l in sys.stdin]\" 2>/dev/null \
+    | less -RFX \
+    ; \
+    }; f"
+  now = "!f() { \
+    echo \"\\033[90m$(git rev-parse --abbrev-ref HEAD)\\033[0m\"; \
+    git status \
+    | grep -v '  (use \"git ' \
+    | awk '/Changes not staged for commit:/{print \"\\033[0mChanges not staged:\\033[31m\";c=0} \
+      c;/Changes to be committed:/{print \"Changes to be committed:\\033[32m\";c=1};/Untracked files:/{print \"\\033[0m\";s=0} \
+      s; /Changes not staged for commit:/{s=1}' \
+    ; \
+    }; f"
+  amend = commit --amend --no-edit
+  pushdev = push -f origin HEAD:dev
+  pr = "!f() { \
+    git push -u origin $(git rev-parse --abbrev-ref HEAD) \
+    ; \
+    }; f"
