@@ -8,6 +8,9 @@
 
     "jobnum":                    { "fg": "gray10",          "bg": "gray6",        "attrs": [] },
 
+    "date":                       { "fg": "gray4",          "bg": "gray0",        "attrs": [] },
+    "time":                       { "fg": "gray4",          "bg": "gray0",        "attrs": [] },
+
     "cwd":                       { "fg": "gray8",           "bg": "gray1",        "attrs": [] },
     "cwd:current_folder":        { "fg": "white",           "bg": "gray1",        "attrs": ["bold"] },
     "cwd:divider":               { "fg": "gray6",           "bg": "gray1",        "attrs": [] },

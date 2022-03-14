@@ -1,11 +1,11 @@
 {
 	"dividers": {
 		"left": {
-			"hard": " ",
+			"hard": " ",
 			"soft": " "
 		},
 		"right": {
-			"hard": " ",
+			"hard": " ",
 			"soft": " "
 		}
 	},
@@ -38,7 +38,7 @@
 		},
 
 		"time": {
-			"before": ""
+			"before": "⌚️ "
 		},
 
 		"powerline.segments.common.net.network_load": {
