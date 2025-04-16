@@ -101,7 +101,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 function add_dir_to_path_if_missing {
     local dir="${1}"
-    local postfix="$([ "${2}" = "postfix" ] && echo "postfix" )"
+    local postfix="$( [ "${2}" = "postfix" ] && echo "postfix" )"
     local pattern="${dir}:"
 
     if [ -n "${postfix}" ]; then
@@ -162,18 +162,6 @@ fi
 
 
 #
-#  Setup Ruby
-#
-
-export RUBY_VERSION="$($(which gem) env | grep '\- RUBY VERSION:' | awk '{print $4}' | egrep -o '^[0-9]\.[0-9]\.*[0-9]*')"
-export RUBY_USER_DIR="$($(which gem) env | grep '\- USER INSTALLATION DIRECTORY:' | awk '{print $5}')"
-
-if [ -n "$(which gem)" ] && [ -n "${RUBY_VERSION}" ] && [ -n ${RUBY_USER_DIR} ] && [ -d ${RUBY_USER_DIR} ]; then
-    add_dir_to_path_if_missing "${RUBY_USER_DIR}/bin"
-fi
-
-
-#
 #  Setup Python3 AND Powerline
 #
 
@@ -210,7 +198,7 @@ add_dir_to_path_if_missing "${HOME}/.local/bin"
 #  VScode support
 #
 
-if [ "${OS_NAME}" = "Darwin" ]; then 
+if [ "${OS_NAME}" = "Darwin" ]; then
     add_dir_to_path_if_missing "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" "postfix"
 fi
 
@@ -269,7 +257,7 @@ if [ -z "${GO}" ] && [ -n "${BREW}" ]; then
     for G in "${BREW_PATH}/opt/go"*; do
         add_dir_to_path_if_missing "${G}/bin"
     done
-    GO="${which go}"
+    GO="$(which go)"
 fi
 if [ -n "${GO}" ]; then
     if [ ! -f "${HOME}/.golang" ]; then
@@ -282,9 +270,10 @@ if [ -n "${GO}" ]; then
             export GOPATH="${HOME}/.golang:${GOPATH}"
         fi
     fi
-    if [ -d "${HOME}/wrk" ]; then
-        export GOPATH="${GOPATH}:${HOME}/wrk"
-    fi
+    # if [ -d "${HOME}/wrk" ]; then
+    #     export GOPATH="${GOPATH}:${HOME}/wrk"
+    # fi
+    add_dir_to_path_if_missing "${GOPATH}/bin"
 fi
 
 
@@ -307,8 +296,7 @@ if [ -n "${KUBECTL}" ] && [ "$(${KUBECTL} version --client | grep -o 'Client Ver
     . <(${KUBECTL} completion bash)
     if [ -d "${HOME}/.kube" ]; then
         for _CONF_ in $(ls "${HOME}/.kube/"); do
-            KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/${_CONF_}"
-            if [ -z "$(echo "${KUBECONFIG}" | grep -o ":${HOME}/.kube/${_CONF_}")" ] && [ -d "${HOME}/.kube/${_CONF_}" ]; then
+            if [ -z "$(echo "${KUBECONFIG}" | grep -o ":${HOME}/.kube/${_CONF_}")" ] && [ -f "${HOME}/.kube/${_CONF_}" ]; then
                 export KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/${_CONF_}"
             fi
         done
